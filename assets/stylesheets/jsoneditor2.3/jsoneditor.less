@@ -1,0 +1,616 @@
+@iconpath: '../../img/jsoneditor2.3/jsoneditor-icons.png';
+
+.jsoneditor {
+
+	color: #1A1A1A;
+	border: 1px solid #97B0F8;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	position: relative;
+	padding: 0;
+	line-height: 100%;
+
+	.field, .value,.readonly {
+		border: 1px solid transparent;
+		min-height: 16px;
+		min-width: 32px;
+		padding: 2px;
+		margin: 1px;
+		word-wrap: break-word;
+		float: left;
+	}
+
+	/* adjust margin of p elements inside editable divs, needed for Opera, IE */
+	.field p, .value p {
+		margin: 0;
+	}
+
+	.value {
+		word-break: break-word;
+	}
+
+	.readonly {
+		min-width: 16px;
+		color: gray;
+	}
+
+	.empty {
+		border-color: lightgray;
+		border-style: dashed;
+		border-radius: 2px;
+	}
+
+	.field.empty {
+		background-image: url(@iconpath);
+		background-position: 0 -144px;
+	}
+
+	.value.empty {
+		background-image: url(@iconpath);
+		background-position: -48px -144px;
+	}
+
+	.value.url {
+		color: green;
+		text-decoration: underline;
+	}
+
+	a.value.url:hover, a.value.url:focus {
+		color: red;
+	}
+
+	.separator {
+		padding: 3px 0;
+		vertical-align: top;
+		color: gray;
+	}
+
+	.field[contenteditable=true]:focus,
+	.field[contenteditable=true]:hover,
+	.value[contenteditable=true]:focus,
+	.value[contenteditable=true]:hover,
+	.field.highlight,
+	.value.highlight {
+		background-color: #FFFFAB;
+		border: 1px solid yellow;
+		border-radius: 2px;
+	}
+
+	.field.highlight-active,
+	.field.highlight-active:focus,
+	.field.highlight-active:hover,
+	.value.highlight-active,
+	.value.highlight-active:focus,
+	.value.highlight-active:hover {
+		background-color: #ffee00;
+		border: 1px solid #ffc700;
+		border-radius: 2px;
+	}
+
+	div.tree {
+		width: 100%;
+		height: 100%;
+		position: relative;
+		overflow: auto;
+
+		button {
+			width: 24px;
+			height: 24px;
+			padding: 0;
+			margin: 0;
+			border: none;
+			cursor: pointer;
+			background: transparent url(@iconpath);
+
+			&.collapsed {
+				background-position: 0 -48px;
+			}
+
+			&.expanded {
+				background-position: 0 -72px;
+			}
+
+			&.contextmenu {
+				background-position: -48px -72px;
+			}
+
+			&.contextmenu:hover,
+			&.contextmenu:focus,
+			&.contextmenu.selected {
+				background-position: -48px -48px;
+			}
+
+			&.invisible {
+				visibility: hidden;
+				background: none;
+			}
+
+			&:focus {
+				/* TODO: nice outline for buttons with focus
+				outline: #97B0F8 solid 2px;
+				box-shadow: 0 0 8px #97B0F8;
+				*/
+				background-color: #f5f5f5;
+				outline: #e5e5e5 solid 1px;
+			}
+
+			&.dragarea {
+				background: url(@iconpath) -72px -72px;
+				cursor: move;
+			}
+
+			&.dragarea:hover,
+			&.dragarea:focus {
+				background-position: -72px -48px;
+			}
+		}
+
+		*:focus {
+			outline: none;
+		}
+	
+		table.tree {
+			border-collapse: collapse;
+			border-spacing: 0;
+			width: 100%;
+			margin: 0;
+		}
+	}
+
+	div.outer {
+		width: 100%;
+		height: 100%;
+		margin: -35px 0 0 0;
+		padding: 35px 0 0 0;
+
+		-moz-box-sizing: border-box;
+		-webkit-box-sizing: border-box;
+		box-sizing: border-box;
+
+		overflow: hidden;
+	}
+
+	textarea.text {
+		width: 100%;
+		height: 100%;
+		margin: 0;
+
+		-moz-box-sizing: border-box;
+		-webkit-box-sizing: border-box;
+		box-sizing: border-box;
+
+		border: none;
+		background-color: white;
+		resize: none;
+	}
+
+	tr.highlight {
+		background-color: #FFFFAB;
+	}
+
+	tr,
+	th,
+	td {
+		padding: 0;
+		margin: 0;
+	}
+
+	td {
+		vertical-align: top;
+	}
+
+	td.tree {
+		vertical-align: top;
+	}
+
+	.field,
+	.value,
+	td,
+	th,
+	textarea {
+		font-family: droid sans mono, monospace, courier new, courier, sans-serif;
+		font-size: 10pt;
+		color: #1A1A1A;
+	}
+
+	/* ContextMenu - main menu */
+	&-contextmenu {
+		position: absolute;
+		z-index: 99999;
+	
+		ul {
+			position: relative;
+			left: 0;
+			top: 0;
+			width: 124px;
+
+			background: white;
+			border: 1px solid #d3d3d3;
+			box-shadow: 2px 2px 12px rgba(128, 128, 128, 0.3);
+
+			list-style: none;
+			margin: 0;
+			padding: 0;
+
+			li button {
+				padding: 0;
+				margin: 0;
+				width: 124px;
+				height: 24px;
+				border: none;
+				cursor: pointer;
+				color: #4d4d4d;
+				background: transparent;
+
+				line-height: 26px;
+				text-align: left;
+
+				/* Fix button padding in firefox */
+				&::-moz-focus-inner {
+					padding: 0;
+					border: 0;
+				}
+
+				&:hover,
+				&:focus {
+					color: #1a1a1a;
+					background-color: #f5f5f5;
+					outline: none;
+				}
+
+				&.default {
+					width: 92px;
+				}
+
+				&.expand {
+					float: right;
+					width: 32px;
+					height: 24px;
+					border-left: 1px solid #e5e5e5;
+				}
+			}
+		}
+
+
+		div.icon {
+			float: left;
+			width: 24px;
+			height: 24px;
+			border: none;
+			padding: 0;
+			margin: 0;
+			background-image: url(@iconpath);
+		}
+
+		ul li button div.expand {
+			float: right;
+			width: 24px;
+			height: 24px;
+			padding: 0;
+			margin: 0 4px 0 0;
+			background: url(@iconpath) 0 -72px;
+			opacity: 0.4;
+		}
+
+		ul li button:hover div.expand,
+		ul li button:focus div.expand,
+		ul li.selected div.expand,
+		ul li button.expand:hover div.expand,
+		ul li button.expand:focus div.expand {
+			opacity: 1;
+		}
+
+		.separator {
+			height: 0;
+			border-top: 1px solid #e5e5e5;
+			padding-top: 5px;
+			margin-top: 5px;
+		}
+
+		button {
+			&.remove > .icon {
+				background-position: -24px -24px;
+			}
+			&.remove:hover > .icon,
+			&.remove:focus > .icon {
+				background-position: -24px 0;
+			}
+
+			&.append > .icon {
+				background-position: 0 -24px;
+			}
+			&.append:hover > .icon,
+			&.append:focus > .icon {
+				background-position: 0 0;
+			}
+
+			&.insert > .icon {
+				background-position: 0 -24px;
+			}
+			&.insert:hover > .icon,
+			&.insert:focus > .icon {
+				background-position: 0 0;
+			}
+
+			&.duplicate > .icon {
+				background-position: -48px -24px;
+			}
+			&.duplicate:hover > .icon,
+			&.duplicate:focus > .icon {
+				background-position: -48px 0;
+			}
+
+			&.sort-asc > .icon {
+				background-position: -168px -24px;
+			}
+			&.sort-asc:hover > .icon,
+			&.sort-asc:focus > .icon {
+				background-position: -168px 0;
+			}
+
+			&.sort-desc > .icon {
+				background-position: -192px -24px;
+			}
+			&.sort-desc:hover > .icon,
+			&.sort-desc:focus > .icon {
+				background-position: -192px 0;
+			}
+		}
+
+		/* ContextMenu - sub menu */
+
+		ul li {
+			.selected {
+				background-color: #D5DDF6;
+			}
+
+			overflow: hidden;
+
+			ul {
+				display: none;
+				position: relative;
+				left: -10px;
+				top: 0;
+
+				border: none;
+				box-shadow: inset 0 0 10px rgba(128, 128, 128, 0.5);
+				padding: 0 10px;
+
+				/* TODO: transition is not supported on IE8-9 */
+				-webkit-transition: all 0.3s ease-out;
+				-moz-transition: all 0.3s ease-out;
+				-o-transition: all 0.3s ease-out;
+				transition: all 0.3s ease-out;
+
+				li button {
+					padding-left: 24px;
+
+					&:hover,
+					&:focus {
+						background-color: #f5f5f5;
+					}
+				}
+			}
+		}
+
+		button.type-string > .icon {
+			background-position: -144px -24px;
+		}
+		button.type-string:hover > .icon,
+		button.type-string:focus > .icon,
+		button.type-string.selected > .icon{
+			background-position: -144px 0;
+		}
+
+		button.type-auto > .icon {
+			background-position: -120px -24px;
+		}
+		button.type-auto:hover > .icon,
+		button.type-auto:focus > .icon,
+		button.type-auto.selected > .icon {
+			background-position: -120px 0;
+		}
+
+		button.type-object > .icon {
+			background-position: -72px -24px;
+		}
+		button.type-object:hover > .icon,
+		button.type-object:focus > .icon,
+		button.type-object.selected > .icon{
+			background-position: -72px 0;
+		}
+
+		button.type-array > .icon {
+			background-position: -96px -24px;
+		}
+		button.type-array:hover > .icon,
+		button.type-array:focus > .icon,
+		button.type-array.selected > .icon{
+			background-position: -96px 0;
+		}
+
+		button.type-modes > .icon {
+			background-image: none;
+			width: 6px;
+		}
+	}
+
+	.menu {
+		width: 100%;
+		height: 35px;
+		padding: 2px;
+		margin: 0;
+		overflow: hidden;
+		-moz-box-sizing: border-box;
+		-webkit-box-sizing: border-box;
+		box-sizing: border-box;
+
+		color: #1A1A1A;
+		background-color: #D5DDF6;
+		border-bottom: 1px solid #97B0F8;
+	}
+
+	.menu button {
+		width: 26px;
+		height: 26px;
+		margin: 2px;
+		padding: 0;
+		border-radius: 2px;
+		border: 1px solid #aec0f8;
+		background: #e3eaf6 url(@iconpath);
+		color: #4D4D4D;
+		opacity: 0.8;
+
+		font-family: arial, sans-serif;
+		font-size: 10pt;
+
+		float: left;
+	}
+
+	.menu button:hover {
+		background-color: #f0f2f5;
+	}
+	.menu button:active {
+		background-color: #ffffff;
+	}
+	.menu button:disabled {
+		background-color: #e3eaf6;
+	}
+
+	.menu button.collapse-all {
+		background-position: 0 -96px;
+	}
+	.menu button.expand-all {
+		background-position: 0 -120px;
+	}
+	.menu button.undo {
+		background-position: -24px -96px;
+	}
+	.menu button.undo:disabled {
+		background-position: -24px -120px;
+	}
+	.menu button.redo {
+		background-position: -48px -96px;
+	}
+	.menu button.redo:disabled {
+		background-position: -48px -120px;
+	}
+	.menu button.compact {
+		background-position: -72px -96px;
+	}
+	.menu button.format {
+		background-position: -72px -120px;
+	}
+
+	.menu button.modes {
+		background-image: none;
+		width: auto;
+		padding-left: 6px;
+		padding-right: 6px;
+	}
+
+	.menu button.separator {
+		margin-left: 10px;
+	}
+
+	.menu a {
+		font-family: arial, sans-serif;
+		font-size: 10pt;
+		color: #97B0F8;
+		vertical-align: middle;
+	}
+
+	.menu a:hover {
+		color: red;
+	}
+
+	.menu a.poweredBy {
+		font-size: 8pt;
+		position: absolute;
+		right: 0;
+		top: 0;
+		padding: 10px;
+	}
+
+	/* TODO: css for button:disabled is not supported by IE8 */
+
+
+	.search input,
+	.search .results {
+		font-family: arial, sans-serif;
+		font-size: 10pt;
+		color: #1A1A1A;
+	}
+
+	.search {
+		position: absolute;
+		right: 2px;
+		top: 2px;
+	}
+
+	.search .frame {
+		border: 1px solid #97B0F8;
+		background-color: white;
+		padding: 0 2px;
+		margin: 0;
+	}
+
+	.search .frame table {
+		border-collapse: collapse;
+	}
+
+	.search input {
+		width: 120px;
+		border: none;
+		outline: none;
+		margin: 1px;
+	}
+
+	.search .results {
+		color: #4d4d4d;
+		padding-right: 5px;
+		line-height: 24px;
+	}
+
+	.search button {
+		width: 16px;
+		height: 24px;
+		padding: 0;
+		margin: 0;
+		border: none;
+		background: url(@iconpath);
+		vertical-align: top;
+	}
+
+	.search button:hover {
+		background-color: transparent;
+	}
+
+	.search button.refresh {
+		width: 18px;
+		background-position: -99px -73px;
+	}
+
+	.search button.next {
+		cursor: pointer;
+		background-position: -124px -73px;
+	}
+	.search button.next:hover {
+		background-position: -124px -49px;
+	}
+
+	.search button.previous {
+		cursor: pointer;
+		background-position: -148px -73px;
+		margin-right: 2px;
+	}
+	.search button.previous:hover {
+		background-position: -148px -49px;
+	}
+
+}
